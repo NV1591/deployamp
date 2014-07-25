@@ -6,9 +6,6 @@ from celery import Celery
 # Instantiate the app object and define the config
 app = Flask(__name__)
 
-# Define a celery broker agent to queue tasks
-worker = Celery('tasks', backend='amqp', broker='amqp://')
-
 app.config.from_object('config')
 
 mail = Mail(app)

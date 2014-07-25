@@ -152,6 +152,7 @@ def email_content_generation(email_dictionary):
                            email_dictionary=email_dictionary,
                            time=current_time_adjusted)
     app.logger.info(html)
+    return html
 
 
 def db_clean_up():
@@ -162,7 +163,7 @@ def db_clean_up():
 def process_job(job_type):
     dict_list = []
     dict_job = dict()
-    failed_tasks['count'] = 1
+    # failed_tasks['count'] = 1
     rows = Task_List.query.filter(Task_List.job_type == job_type).all()
     for row in rows:
         job_dict = dict()
@@ -170,9 +171,6 @@ def process_job(job_type):
         job_dict['Owner'] = row.job_owner
         job_dict['Failure Reason'] = row.task_message
         job_dict['Failed Tasks'] = 1
-        if not counter:
-            for key in job_dict.keys():
-                email_headers.append(key)
         dict_list.append(job_dict)
 
     for item in dict_list:
@@ -195,9 +193,13 @@ def process_job(job_type):
 
 def email_scheduler(email_html):
     msg = Message(subject='Test Email Job Task Breakdown',
-                  recipients=["nakkul.verma15@gmail.com"])
+                  recipients=["nakkul.verma15@gmail.com"],
+                  sender='ampmailuser@gmail.com')
     msg.html = email_html
-    mail.send(msg)
+    try:
+        mail.send(msg)
+    except Exception as e:
+        app.logger.error('error - {0} | e - {1}'.format(e.__class__, e))
 
 
 def database_feed():
@@ -233,7 +235,7 @@ def main():
     email_dictionary = database_retrieve()
     # email_html = email_content_generation(email_dictionary, email_headers)
     email_html = email_content_generation(email_dictionary)
-    # app.logger.info(email_html)
+    app.logger.info(type(email_html))
     email_scheduler(email_html)
     # db_clean_up()
     return 'I am not fucked yet!'
