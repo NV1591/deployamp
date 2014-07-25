@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang = "en">
+<head>
+	<meta charset= "utf-8">
+</head>
+<body>
+	<p>Hi All,</p>
+	<p>Please find below the details of the failed tasks at {{ time }} PDT.</p>
+	<table border="1px solid">
+		{% for key in email_dictionary.keys(): %}
+			<p><b>{{ key }}</b></p>
+			<tr bgcolor="#FF9900">
+				<td align="center">Job ID</td>
+				<td align="center">Owner</td>
+				<td align="center">Failed Tasks</td>
+				<td align="center">Failure Reason</td>
+			</tr>
+			{% for item in email_dictionary[key]: %}
+				<tr>
+					<td align="center"><a href="http://ampushinsight.com/amp/monitor/activity_log/#/jobID/{{ item['Job ID'] }}">{{ item['Job ID'] }}</a></td>
+					<td align="center">{{ item['Owner'] }}</td>
+					<td align="center">{{ item['Failed Tasks'] }}</td>
+					<td align="center">{{ item['Failure Reason'] }}</td>					
+				</tr>
+			{% endfor %}
+		{% endfor %}
+	</table>
+	<p>Regards,</p>
+	<p>Email Generation engine</p>
+</body>
+</html>
